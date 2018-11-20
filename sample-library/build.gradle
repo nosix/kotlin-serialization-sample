@@ -10,6 +10,7 @@ plugins {
 }
 repositories {
     mavenCentral()
+    // for kotlinx-serialization-runtime
     maven { url "https://kotlin.bintray.com/kotlinx" }
 }
 group 'com.example'
