@@ -87,7 +87,7 @@ kotlin {
 }
 
 node {
-    nodeVersion = '10.13.0'
+    nodeVersion = project.nodeVersion
 }
 
 // see: https://github.com/JetBrains/kotlin/blob/503f061c8c00c1b1a56148694ffbf54181b0e070/idea/idea-gradle/src/org/jetbrains/kotlin/idea/configuration/KotlinGradleWebMultiplatformModuleBuilder.kt#L289-L302
