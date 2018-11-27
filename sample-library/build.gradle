@@ -2,6 +2,9 @@ buildscript {
     repositories {
         mavenCentral()
     }
+    dependencies {
+        classpath("com.liferay:com.liferay.gradle.plugins.node:$nodePluginVersion")
+    }
 }
 
 plugins {
@@ -17,6 +20,7 @@ group 'com.example'
 version '0.0.1'
 
 apply plugin: 'maven-publish'
+apply plugin: "com.liferay.node"
 
 kotlin {
     targets {
@@ -73,3 +77,38 @@ kotlin {
         }
     }
 }
+
+[compileKotlinJs, compileTestKotlinJs]*.configure {
+    kotlinOptions {
+        sourceMap = true
+        sourceMapEmbedSources = "always"
+        moduleKind = 'commonjs'
+    }
+}
+
+node {
+    nodeVersion = '10.13.0'
+}
+
+// see: https://github.com/JetBrains/kotlin/blob/503f061c8c00c1b1a56148694ffbf54181b0e070/idea/idea-gradle/src/org/jetbrains/kotlin/idea/configuration/KotlinGradleWebMultiplatformModuleBuilder.kt#L289-L302
+task populateNodeModules(dependsOn: [npmInstall, compileTestKotlinJs]) {
+    doLast {
+        copy {
+            from compileKotlinJs.destinationDir
+            from compileTestKotlinJs.destinationDir
+
+            def jsCompilations = kotlin.targets.js.compilations
+            jsCompilations.test.runtimeDependencyFiles.each {
+                if (it.exists() && !it.isDirectory()) {
+                    println("from ${it.toString().split('/').last()}")
+                    from zipTree(it.absolutePath).matching { include '*.js' }
+                }
+            }
+
+            into "${projectDir}/node_modules"
+        }
+    }
+}
+
+jsTest.dependsOn npmRunTest
+npmRunTest.dependsOn populateNodeModules
