@@ -15,6 +15,8 @@ repositories {
     mavenCentral()
     // for kotlinx-serialization-runtime
     maven { url "https://kotlin.bintray.com/kotlinx" }
+    // for DateTime
+    maven { url "https://dl.bintray.com/soywiz/soywiz" }
 }
 group 'com.example'
 version '0.0.1'
@@ -36,6 +38,7 @@ kotlin {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
                 implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinSerializationVersion"
+                implementation "com.soywiz:klock:$klockVersion"
             }
         }
         commonTest {
