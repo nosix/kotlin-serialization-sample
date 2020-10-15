@@ -113,5 +113,7 @@ Temporary Items
 
 # End of https://www.gitignore.io/api/macos,intellij+all
 
+.gradle
+build
 node_modules
 package-lock.json

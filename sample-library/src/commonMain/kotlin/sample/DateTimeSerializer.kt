@@ -1,24 +1,20 @@
 package sample
 
-import com.soywiz.klock.DateFormat
-import com.soywiz.klock.DateTime
-import com.soywiz.klock.parse
-import kotlinx.serialization.Decoder
-import kotlinx.serialization.Encoder
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-// FIXME IllegalStateException: Class DateTime is not externally serializable
-@Serializer(forClass = DateTime::class)
 object DateTimeSerializer : KSerializer<DateTime> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DateTime", PrimitiveKind.LONG)
 
-    private val format = DateFormat("yyyy-MM-dd'T'hh:mm:ss")
-
-    override fun serialize(output: Encoder, obj: DateTime) {
-        output.encodeString(obj.format(format))
+    override fun serialize(encoder: Encoder, value: DateTime) {
+        encoder.encodeLong(value.epochTime)
     }
 
-    override fun deserialize(input: Decoder): DateTime {
-        return format.parse(input.decodeString()).utc
+    override fun deserialize(decoder: Decoder): DateTime {
+        return DateTime(decoder.decodeLong())
     }
 }

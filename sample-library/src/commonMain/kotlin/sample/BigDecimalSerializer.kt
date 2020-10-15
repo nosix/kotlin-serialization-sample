@@ -1,19 +1,21 @@
 package sample
 
-import kotlinx.serialization.Decoder
-import kotlinx.serialization.Encoder
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
-// FIXME IllegalStateException: Class DateTime is not externally serializable
-@Serializer(forClass = BigDecimal::class)
 object BigDecimalSerializer: KSerializer<BigDecimal> {
 
-    override fun serialize(output: Encoder, obj: BigDecimal) {
-        output.encodeString(obj.toString())
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("BigDecimal", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: BigDecimal) {
+        encoder.encodeString(value.toString())
     }
 
-    override fun deserialize(input: Decoder): BigDecimal {
-        return BigDecimal(input.decodeString())
+    override fun deserialize(decoder: Decoder): BigDecimal {
+        return BigDecimal(decoder.decodeString())
     }
 }

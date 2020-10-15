@@ -1,3 +1,9 @@
+# Usage
+
+```
+$ ./gradlew allTests
+```
+
 # tasks
 
 - assemble
